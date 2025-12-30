@@ -2,119 +2,156 @@
 <html lang="zh-TW">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>公司專用 AI 提問優化器</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>宏國地政 | 易丞地政 - AI 智慧提問系統</title>
     <style>
         :root {
-            --primary-color: #2563eb;
-            --secondary-color: #1e40af;
-            --bg-color: #f3f4f6;
+            /* 品牌色系：沈穩的深藍色代表專業與信任 */
+            --primary-color: #0f4c81; 
+            --accent-color: #c5a065; /* 金色點綴 */
+            --bg-color: #f0f2f5;
+            --text-color: #333;
             --card-bg: #ffffff;
-            --text-color: #1f2937;
         }
 
+        /* 禁止選取文字，防止直接複製網頁內容 */
         body {
-            font-family: 'Segoe UI', Microsoft JhengHei, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
             background-color: var(--bg-color);
             color: var(--text-color);
-            line-height: 1.6;
             margin: 0;
-            padding: 20px;
+            padding: 0;
+            user-select: none; /* 禁止選取文字 */
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
         }
 
+        /* 頂部品牌欄 */
+        .brand-header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .brand-header h1 {
+            margin: 0;
+            font-size: 1.5rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+        }
+        
+        .brand-subtitle {
+            font-size: 0.9rem;
+            color: #e0e0e0;
+            margin-top: 5px;
+        }
+
+        /* 主容器 */
         .container {
             max-width: 800px;
-            margin: 0 auto;
+            margin: 20px auto;
+            padding: 0 15px; /* 手機版兩側留白 */
+        }
+
+        .main-card {
             background: var(--card-bg);
-            padding: 40px;
+            padding: 30px;
             border-radius: 12px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            border-top: 5px solid var(--accent-color);
         }
 
-        h1 {
-            color: var(--primary-color);
+        .intro-text {
             text-align: center;
-            margin-bottom: 10px;
+            color: #666;
+            margin-bottom: 25px;
+            font-size: 0.95rem;
         }
 
-        p.subtitle {
-            text-align: center;
-            color: #6b7280;
-            margin-bottom: 30px;
-        }
-
+        /* 表單區域 */
         .form-section {
-            border: 1px solid #e5e7eb;
-            padding: 20px;
+            background-color: #f8f9fa;
+            border: 1px solid #e9ecef;
+            padding: 15px;
             border-radius: 8px;
-            margin-bottom: 20px;
-            background-color: #fafafa;
+            margin-bottom: 15px;
         }
 
         label {
             display: block;
-            font-weight: bold;
+            font-weight: 600;
             margin-bottom: 8px;
-            color: #374151;
+            color: var(--primary-color);
         }
 
         .helper-text {
             font-size: 0.85em;
-            color: #6b7280;
-            margin-bottom: 8px;
+            color: #6c757d;
+            margin-bottom: 10px;
             display: block;
         }
 
+        /* 輸入框優化，防止手機版字體過小導致縮放 */
         input, select, textarea {
             width: 100%;
             padding: 12px;
-            margin-bottom: 20px;
-            border: 1px solid #d1d5db;
+            border: 1px solid #ced4da;
             border-radius: 6px;
-            font-size: 16px;
-            box-sizing: border-box; /* Fix padding issue */
+            font-size: 16px; /* 關鍵：16px以上手機不會自動放大 */
+            box-sizing: border-box;
+            background-color: #fff;
+            transition: border-color 0.3s;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
         }
 
         textarea {
-            height: 100px;
+            min-height: 100px;
             resize: vertical;
         }
 
+        /* 按鈕樣式 */
         button.generate-btn {
-            display: block;
             width: 100%;
-            padding: 15px;
+            padding: 16px;
             background-color: var(--primary-color);
             color: white;
             border: none;
-            border-radius: 6px;
-            font-size: 18px;
+            border-radius: 8px;
+            font-size: 1.1rem;
             font-weight: bold;
             cursor: pointer;
-            transition: background 0.3s;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: all 0.2s;
+            margin-top: 10px;
         }
 
-        button.generate-btn:hover {
-            background-color: var(--secondary-color);
+        button.generate-btn:active {
+            transform: scale(0.98);
         }
 
+        /* 結果區域 */
         .result-area {
             margin-top: 30px;
             padding: 20px;
             background-color: #ecfdf5;
             border: 1px solid #10b981;
             border-radius: 8px;
-            display: none; /* Hidden by default */
-        }
-
-        .result-area h3 {
-            margin-top: 0;
-            color: #065f46;
+            display: none;
         }
 
         #finalPrompt {
             width: 100%;
-            height: 200px;
+            height: 250px;
             background: white;
             padding: 15px;
             border: 1px solid #ccc;
@@ -124,132 +161,206 @@
             color: #333;
             white-space: pre-wrap;
             overflow-y: auto;
+            margin-bottom: 15px;
+            /* 允許在結果框內選取文字以便複製 */
+            user-select: text; 
+            -webkit-user-select: text;
         }
 
         .copy-btn {
-            margin-top: 10px;
-            padding: 10px 20px;
+            width: 100%;
+            padding: 12px;
             background-color: #059669;
             color: white;
             border: none;
-            border-radius: 4px;
+            border-radius: 6px;
+            font-size: 1rem;
             cursor: pointer;
-        }
-        
-        .copy-btn:hover {
-            background-color: #047857;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
         }
 
-        .tip-box {
-            background-color: #eff6ff;
-            border-left: 4px solid var(--primary-color);
-            padding: 15px;
-            margin-bottom: 20px;
-            font-size: 0.9em;
+        /* 頁尾版權 */
+        footer {
+            text-align: center;
+            padding: 30px 20px;
+            color: #888;
+            font-size: 0.8rem;
+            border-top: 1px solid #eee;
+            margin-top: 30px;
+        }
+
+        /* 手機版適配 (Media Queries) */
+        @media (max-width: 600px) {
+            .brand-header h1 { font-size: 1.2rem; }
+            .container { padding: 0 10px; margin-top: 10px; }
+            .main-card { padding: 20px 15px; }
+            button.generate-btn { font-size: 1rem; }
         }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <h1>🚀 AI 提問優化助手</h1>
-    <p class="subtitle">填寫以下欄位，自動生成讓 AI (ChatGPT/Claude/Gemini) 給出完美答案的指令！</p>
+    <header class="brand-header">
+        <h1>宏國地政 | 易丞地政</h1>
+        <div class="brand-subtitle">AI 智能工作輔助系統</div>
+    </header>
 
-    <div class="tip-box">
-        <strong>為什麼要填這些？</strong> <br>
-        AI 就像一個剛報到的實習生，你給的指令越清楚（角色、背景、限制），他給你的產出就越好。
+    <div class="container">
+        <div class="main-card">
+            <p class="intro-text">請輸入您的需求，系統將自動生成適合 AI 回答的專業指令。</p>
+
+            <div class="form-section">
+                <label>1. AI 扮演角色 (Role)</label>
+                <span class="helper-text">例如：土地代書、不動產估價師、法律顧問</span>
+                <input type="text" id="role" placeholder="預設：資深地政士/專業顧問">
+            </div>
+
+            <div class="form-section">
+                <label>2. 想問的問題 / 任務 (Task)</label>
+                <span class="helper-text">請簡述您遇到的客戶問題或需要處理的事項。</span>
+                <textarea id="task" placeholder="例如：客戶詢問共有土地分割的流程，以及如果有人不同意該怎麼辦？"></textarea>
+            </div>
+
+            <div class="form-section">
+                <label>3. 背景資訊或特殊情況 (Context)</label>
+                <span class="helper-text">補充細節，AI 才能回答精準。</span>
+                <textarea id="context" placeholder="例如：土地位於新北市，共有持分人有5位，其中一位失聯。需要引用最新法規。"></textarea>
+            </div>
+
+            <div class="form-section">
+                <label>4. 希望的回答格式 (Format)</label>
+                <select id="format">
+                    <option value="條列式重點解析">條列式重點解析 (適合快速閱讀)</option>
+                    <option value="詳細的操作步驟教學">詳細的操作步驟教學 (SOP)</option>
+                    <option value="給客戶的正式回函/Email">給客戶的正式回函/Email</option>
+                    <option value="法規比較表格">法規比較表格</option>
+                    <option value="口語化解釋 (適合電話說明)">口語化解釋 (適合電話說明)</option>
+                </select>
+            </div>
+
+            <button class="generate-btn" onclick="generatePrompt()">⚡ 立即產生 AI 提問指令</button>
+
+            <div class="result-area" id="resultArea">
+                <h3 style="margin-top:0; color: #047857;">✅ 指令已生成：</h3>
+                <div id="finalPrompt"></div>
+                <button class="copy-btn" onclick="copyToClipboard()">📋 點此複製，貼給 AI</button>
+            </div>
+        </div>
     </div>
 
-    <div class="form-section">
-        <label>1. 你希望 AI 扮演什麼角色？ (Role)</label>
-        <span class="helper-text">例如：資深行銷經理、Python 程式專家、嚴格的編輯、法律顧問</span>
-        <input type="text" id="role" placeholder="例如：資深專案經理">
-    </div>
+    <footer>
+        <p>© 2025 宏國地政 | 易丞地政. All Rights Reserved.</p>
+        <p>本系統僅供內部員工使用，嚴禁未經授權之複製、修改或外流。</p>
+    </footer>
 
-    <div class="form-section">
-        <label>2. 你原本想問的問題 / 任務是什麼？ (Task)</label>
-        <span class="helper-text">請輸入你的原始問題，越詳細越好。</span>
-        <textarea id="task" placeholder="例如：幫我寫一封信給客戶，解釋為什麼專案會延期..."></textarea>
-    </div>
+    <script>
+        // --- 核心功能區 ---
 
-    <div class="form-section">
-        <label>3. 有什麼背景資訊或限制條件？ (Context & Constraints)</label>
-        <span class="helper-text">例如：目標客群是年輕人、語氣要委婉、字數在500字以內、需要包含三個解決方案。</span>
-        <textarea id="context" placeholder="例如：原因是原物料缺貨。客戶很重視時程。語氣要非常誠懇且提供補償方案。"></textarea>
-    </div>
+        function generatePrompt() {
+            const role = document.getElementById('role').value.trim() || "資深地政士與專業顧問";
+            const task = document.getElementById('task').value.trim();
+            const context = document.getElementById('context').value.trim() || "無特殊限制，請依照台灣現行法規回答。";
+            const format = document.getElementById('format').value;
 
-    <div class="form-section">
-        <label>4. 你希望 AI 產出的格式是？ (Format)</label>
-        <select id="format">
-            <option value="直接回答">直接文字回答</option>
-            <option value="條列式重點 (Bullet Points)">條列式重點 (Bullet Points)</option>
-            <option value="表格 (Table)">比較表格 (Table)</option>
-            <option value="Email 或是 信件草稿">Email / 信件草稿</option>
-            <option value="程式碼 (Code Block)">程式碼 (Code Block)</option>
-            <option value="Step-by-Step 步驟教學">Step-by-Step 步驟教學</option>
-            <option value="SWOT 分析">SWOT 分析報告</option>
-        </select>
-    </div>
+            if (!task) {
+                alert("⚠️ 請務必輸入「想問的問題」！");
+                return;
+            }
 
-    <button class="generate-btn" onclick="generatePrompt()">✨ 產生完美指令 (點擊這裡)</button>
-
-    <div class="result-area" id="resultArea">
-        <h3>✅ 這是你的優化後指令 (請複製貼給 AI)：</h3>
-        <div id="finalPrompt"></div>
-        <button class="copy-btn" onclick="copyToClipboard()">📋 複製指令</button>
-        <p style="font-size: 0.8em; color: #666; margin-top: 10px;">(複製後，請貼上到 ChatGPT 或 Gemini 對話框)</p>
-    </div>
-</div>
-
-<script>
-    function generatePrompt() {
-        // 1. 獲取輸入值
-        const role = document.getElementById('role').value || "一個樂於助人的專業助理";
-        const task = document.getElementById('task').value;
-        const context = document.getElementById('context').value || "無特殊限制";
-        const format = document.getElementById('format').value;
-
-        // 2. 檢查是否輸入了核心問題
-        if (!task.trim()) {
-            alert("請至少輸入你想問的問題 (第 2 欄位)！");
-            return;
-        }
-
-        // 3. 組合 Prompt (使用結構化框架)
-        const optimizedPrompt = `
+            const optimizedPrompt = `
 【角色設定】
 請你扮演：${role}
 
 【核心任務】
-我需要你協助解決以下問題/完成任務：
+我需要解決以下問題：
 "${task}"
 
 【背景資訊與限制】
-請參考以下背景資訊，並遵守限制條件：
 ${context}
 
 【輸出要求】
-請將回答整理為：「${format}」的格式。
-回答時請確保邏輯清晰，並針對我的問題提供具體可執行的建議。
+1. 請依照「${format}」的格式輸出。
+2. 內容必須專業、精準，並引用相關台灣法規（如適用）。
+3. 語氣請保持專業且具同理心。
 `.trim();
 
-        // 4. 顯示結果
-        document.getElementById('finalPrompt').innerText = optimizedPrompt;
-        document.getElementById('resultArea').style.display = 'block';
-        
-        // 自動捲動到結果區
-        document.getElementById('resultArea').scrollIntoView({behavior: "smooth"});
-    }
+            document.getElementById('finalPrompt').innerText = optimizedPrompt;
+            document.getElementById('resultArea').style.display = 'block';
+            
+            // 平滑捲動到結果
+            setTimeout(() => {
+                document.getElementById('resultArea').scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }, 100);
+        }
 
-    function copyToClipboard() {
-        const text = document.getElementById('finalPrompt').innerText;
-        navigator.clipboard.writeText(text).then(() => {
-            alert("指令已複製！現在去貼給 AI 吧！");
-        }).catch(err => {
-            console.error('複製失敗:', err);
+        function copyToClipboard() {
+            const text = document.getElementById('finalPrompt').innerText;
+            
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(text).then(() => {
+                    alert("✅ 複製成功！請切換到 ChatGPT/Line AI 貼上使用。");
+                }).catch(err => {
+                    fallbackCopy(text);
+                });
+            } else {
+                fallbackCopy(text);
+            }
+        }
+
+        // 備用複製功能 (相容舊手機)
+        function fallbackCopy(text) {
+            const textArea = document.createElement("textarea");
+            textArea.value = text;
+            document.body.appendChild(textArea);
+            textArea.select();
+            try {
+                document.execCommand('copy');
+                alert("✅ 複製成功！");
+            } catch (err) {
+                alert("❌ 複製失敗，請手動選取文字複製。");
+            }
+            document.body.removeChild(textArea);
+        }
+
+        // --- 安全防護區 (防盜機制) ---
+
+        // 1. 禁止右鍵選單
+        document.addEventListener('contextmenu', function(e) {
+            e.preventDefault();
+            // alert('⚠️ 本系統受智慧財產權保護，禁止檢視原始碼。'); // 可選擇是否跳出警告
         });
-    }
-</script>
+
+        // 2. 禁止常見的開發者快捷鍵
+        document.onkeydown = function(e) {
+            // F12
+            if(e.keyCode == 123) {
+                return false;
+            }
+            // Ctrl+U (查看原始碼)
+            if(e.ctrlKey && e.keyCode == 'U'.charCodeAt(0)) {
+                return false;
+            }
+            // Ctrl+Shift+I (開發者工具)
+            if(e.ctrlKey && e.shiftKey && e.keyCode == 'I'.charCodeAt(0)) {
+                return false;
+            }
+            // Ctrl+S (另存新檔)
+            if(e.ctrlKey && e.keyCode == 'S'.charCodeAt(0)) {
+                e.preventDefault();
+                alert('⚠️ 禁止儲存網頁。');
+                return false;
+            }
+            // Ctrl+C (雖然我們允許按鈕複製，但禁止鍵盤直接複製整個網頁)
+            // 這裡做個判斷：如果焦點不在結果框內，則禁止複製
+            /* if(e.ctrlKey && e.keyCode == 'C'.charCodeAt(0)) {
+                 // 可以根據需求決定是否開啟此行嚴格模式
+            } 
+            */
+        }
+    </script>
 
 </body>
 </html>
