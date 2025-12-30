@@ -119,6 +119,14 @@
             resize: vertical;
         }
 
+        /* 自訂格式輸入框專用樣式 */
+        #customFormatInput {
+            display: none; /* 預設隱藏 */
+            margin-top: 10px;
+            border-color: var(--accent-color);
+            background-color: #fffbf0;
+        }
+
         /* 按鈕樣式 */
         button.generate-btn {
             width: 100%;
@@ -232,13 +240,16 @@
 
             <div class="form-section">
                 <label>4. 希望的回答格式 (Format)</label>
-                <select id="format">
+                <span class="helper-text">請選擇預設格式，若選「自訂」可自行輸入。</span>
+                <select id="format" onchange="toggleCustomFormat()">
                     <option value="條列式重點解析">條列式重點解析 (適合快速閱讀)</option>
                     <option value="詳細的操作步驟教學">詳細的操作步驟教學 (SOP)</option>
                     <option value="給客戶的正式回函/Email">給客戶的正式回函/Email</option>
                     <option value="法規比較表格">法規比較表格</option>
                     <option value="口語化解釋 (適合電話說明)">口語化解釋 (適合電話說明)</option>
+                    <option value="custom">✏️ 自訂格式 (手動輸入...)</option>
                 </select>
+                <input type="text" id="customFormatInput" placeholder="請輸入您想要的格式（例如：SWOT分析、心智圖架構...）">
             </div>
 
             <button class="generate-btn" onclick="generatePrompt()">⚡ 立即產生 AI 提問指令</button>
@@ -259,11 +270,37 @@
     <script>
         // --- 核心功能區 ---
 
+        // 切換顯示自訂輸入框
+        function toggleCustomFormat() {
+            const selectBox = document.getElementById('format');
+            const customInput = document.getElementById('customFormatInput');
+            
+            if (selectBox.value === 'custom') {
+                customInput.style.display = 'block';
+                customInput.focus(); // 自動聚焦到輸入框
+            } else {
+                customInput.style.display = 'none';
+            }
+        }
+
         function generatePrompt() {
             const role = document.getElementById('role').value.trim() || "資深地政士與專業顧問";
             const task = document.getElementById('task').value.trim();
             const context = document.getElementById('context').value.trim() || "無特殊限制，請依照台灣現行法規回答。";
-            const format = document.getElementById('format').value;
+            
+            // 處理格式邏輯
+            let formatSelect = document.getElementById('format').value;
+            let finalFormat = formatSelect;
+            
+            if (formatSelect === 'custom') {
+                const customVal = document.getElementById('customFormatInput').value.trim();
+                if (!customVal) {
+                    alert("⚠️ 您選擇了自訂格式，請在下方欄位輸入內容！");
+                    document.getElementById('customFormatInput').focus();
+                    return;
+                }
+                finalFormat = customVal;
+            }
 
             if (!task) {
                 alert("⚠️ 請務必輸入「想問的問題」！");
@@ -282,7 +319,7 @@
 ${context}
 
 【輸出要求】
-1. 請依照「${format}」的格式輸出。
+1. 請依照「${finalFormat}」的格式輸出。
 2. 內容必須專業、精準，並引用相關台灣法規（如適用）。
 3. 語氣請保持專業且具同理心。
 `.trim();
@@ -310,7 +347,7 @@ ${context}
             }
         }
 
-        // 備用複製功能 (相容舊手機)
+        // 備用複製功能
         function fallbackCopy(text) {
             const textArea = document.createElement("textarea");
             textArea.value = text;
@@ -330,7 +367,6 @@ ${context}
         // 1. 禁止右鍵選單
         document.addEventListener('contextmenu', function(e) {
             e.preventDefault();
-            // alert('⚠️ 本系統受智慧財產權保護，禁止檢視原始碼。'); // 可選擇是否跳出警告
         });
 
         // 2. 禁止常見的開發者快捷鍵
@@ -353,12 +389,6 @@ ${context}
                 alert('⚠️ 禁止儲存網頁。');
                 return false;
             }
-            // Ctrl+C (雖然我們允許按鈕複製，但禁止鍵盤直接複製整個網頁)
-            // 這裡做個判斷：如果焦點不在結果框內，則禁止複製
-            /* if(e.ctrlKey && e.keyCode == 'C'.charCodeAt(0)) {
-                 // 可以根據需求決定是否開啟此行嚴格模式
-            } 
-            */
         }
     </script>
 
