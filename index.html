@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>公司專用 AI 提問優化器</title>
+    <style>
+        :root {
+            --primary-color: #2563eb;
+            --secondary-color: #1e40af;
+            --bg-color: #f3f4f6;
+            --card-bg: #ffffff;
+            --text-color: #1f2937;
+        }
+
+        body {
+            font-family: 'Segoe UI', Microsoft JhengHei, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: var(--card-bg);
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            color: var(--primary-color);
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        p.subtitle {
+            text-align: center;
+            color: #6b7280;
+            margin-bottom: 30px;
+        }
+
+        .form-section {
+            border: 1px solid #e5e7eb;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            background-color: #fafafa;
+        }
+
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 8px;
+            color: #374151;
+        }
+
+        .helper-text {
+            font-size: 0.85em;
+            color: #6b7280;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 20px;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            font-size: 16px;
+            box-sizing: border-box; /* Fix padding issue */
+        }
+
+        textarea {
+            height: 100px;
+            resize: vertical;
+        }
+
+        button.generate-btn {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        button.generate-btn:hover {
+            background-color: var(--secondary-color);
+        }
+
+        .result-area {
+            margin-top: 30px;
+            padding: 20px;
+            background-color: #ecfdf5;
+            border: 1px solid #10b981;
+            border-radius: 8px;
+            display: none; /* Hidden by default */
+        }
+
+        .result-area h3 {
+            margin-top: 0;
+            color: #065f46;
+        }
+
+        #finalPrompt {
+            width: 100%;
+            height: 200px;
+            background: white;
+            padding: 15px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-family: monospace;
+            font-size: 14px;
+            color: #333;
+            white-space: pre-wrap;
+            overflow-y: auto;
+        }
+
+        .copy-btn {
+            margin-top: 10px;
+            padding: 10px 20px;
+            background-color: #059669;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        
+        .copy-btn:hover {
+            background-color: #047857;
+        }
+
+        .tip-box {
+            background-color: #eff6ff;
+            border-left: 4px solid var(--primary-color);
+            padding: 15px;
+            margin-bottom: 20px;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>🚀 AI 提問優化助手</h1>
+    <p class="subtitle">填寫以下欄位，自動生成讓 AI (ChatGPT/Claude/Gemini) 給出完美答案的指令！</p>
+
+    <div class="tip-box">
+        <strong>為什麼要填這些？</strong> <br>
+        AI 就像一個剛報到的實習生，你給的指令越清楚（角色、背景、限制），他給你的產出就越好。
+    </div>
+
+    <div class="form-section">
+        <label>1. 你希望 AI 扮演什麼角色？ (Role)</label>
+        <span class="helper-text">例如：資深行銷經理、Python 程式專家、嚴格的編輯、法律顧問</span>
+        <input type="text" id="role" placeholder="例如：資深專案經理">
+    </div>
+
+    <div class="form-section">
+        <label>2. 你原本想問的問題 / 任務是什麼？ (Task)</label>
+        <span class="helper-text">請輸入你的原始問題，越詳細越好。</span>
+        <textarea id="task" placeholder="例如：幫我寫一封信給客戶，解釋為什麼專案會延期..."></textarea>
+    </div>
+
+    <div class="form-section">
+        <label>3. 有什麼背景資訊或限制條件？ (Context & Constraints)</label>
+        <span class="helper-text">例如：目標客群是年輕人、語氣要委婉、字數在500字以內、需要包含三個解決方案。</span>
+        <textarea id="context" placeholder="例如：原因是原物料缺貨。客戶很重視時程。語氣要非常誠懇且提供補償方案。"></textarea>
+    </div>
+
+    <div class="form-section">
+        <label>4. 你希望 AI 產出的格式是？ (Format)</label>
+        <select id="format">
+            <option value="直接回答">直接文字回答</option>
+            <option value="條列式重點 (Bullet Points)">條列式重點 (Bullet Points)</option>
+            <option value="表格 (Table)">比較表格 (Table)</option>
+            <option value="Email 或是 信件草稿">Email / 信件草稿</option>
+            <option value="程式碼 (Code Block)">程式碼 (Code Block)</option>
+            <option value="Step-by-Step 步驟教學">Step-by-Step 步驟教學</option>
+            <option value="SWOT 分析">SWOT 分析報告</option>
+        </select>
+    </div>
+
+    <button class="generate-btn" onclick="generatePrompt()">✨ 產生完美指令 (點擊這裡)</button>
+
+    <div class="result-area" id="resultArea">
+        <h3>✅ 這是你的優化後指令 (請複製貼給 AI)：</h3>
+        <div id="finalPrompt"></div>
+        <button class="copy-btn" onclick="copyToClipboard()">📋 複製指令</button>
+        <p style="font-size: 0.8em; color: #666; margin-top: 10px;">(複製後，請貼上到 ChatGPT 或 Gemini 對話框)</p>
+    </div>
+</div>
+
+<script>
+    function generatePrompt() {
+        // 1. 獲取輸入值
+        const role = document.getElementById('role').value || "一個樂於助人的專業助理";
+        const task = document.getElementById('task').value;
+        const context = document.getElementById('context').value || "無特殊限制";
+        const format = document.getElementById('format').value;
+
+        // 2. 檢查是否輸入了核心問題
+        if (!task.trim()) {
+            alert("請至少輸入你想問的問題 (第 2 欄位)！");
+            return;
+        }
+
+        // 3. 組合 Prompt (使用結構化框架)
+        const optimizedPrompt = `
+【角色設定】
+請你扮演：${role}
+
+【核心任務】
+我需要你協助解決以下問題/完成任務：
+"${task}"
+
+【背景資訊與限制】
+請參考以下背景資訊，並遵守限制條件：
+${context}
+
+【輸出要求】
+請將回答整理為：「${format}」的格式。
+回答時請確保邏輯清晰，並針對我的問題提供具體可執行的建議。
+`.trim();
+
+        // 4. 顯示結果
+        document.getElementById('finalPrompt').innerText = optimizedPrompt;
+        document.getElementById('resultArea').style.display = 'block';
+        
+        // 自動捲動到結果區
+        document.getElementById('resultArea').scrollIntoView({behavior: "smooth"});
+    }
+
+    function copyToClipboard() {
+        const text = document.getElementById('finalPrompt').innerText;
+        navigator.clipboard.writeText(text).then(() => {
+            alert("指令已複製！現在去貼給 AI 吧！");
+        }).catch(err => {
+            console.error('複製失敗:', err);
+        });
+    }
+</script>
+
+</body>
+</html>
