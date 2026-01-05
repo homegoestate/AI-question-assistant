@@ -3,28 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>宏國地政 | 易丞地政 - AI 智慧提問系統</title>
+    <title>宏國地政 | 易丞地政 - AI 智慧提問系統 (Pro)</title>
     <style>
         :root {
-            /* 品牌色系：沈穩的深藍色代表專業與信任 */
+            /* 品牌色系：保持原有沈穩風格 */
             --primary-color: #0f4c81; 
-            --accent-color: #c5a065; /* 金色點綴 */
+            --accent-color: #c5a065;
             --bg-color: #f0f2f5;
             --text-color: #333;
             --card-bg: #ffffff;
+            --highlight-bg: #eeffff; /* 新增高亮背景 */
         }
 
-        /* 禁止選取文字，防止直接複製網頁內容 */
+        /* 基礎設定 */
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
             background-color: var(--bg-color);
             color: var(--text-color);
             margin: 0;
             padding: 0;
-            user-select: none; /* 禁止選取文字 */
+            user-select: none;
             -webkit-user-select: none;
-            -moz-user-select: none;
-            -ms-user-select: none;
         }
 
         /* 頂部品牌欄 */
@@ -56,7 +55,7 @@
         .container {
             max-width: 800px;
             margin: 20px auto;
-            padding: 0 15px; /* 手機版兩側留白 */
+            padding: 0 15px;
         }
 
         .main-card {
@@ -72,6 +71,7 @@
             color: #666;
             margin-bottom: 25px;
             font-size: 0.95rem;
+            line-height: 1.6;
         }
 
         /* 表單區域 */
@@ -81,6 +81,19 @@
             padding: 15px;
             border-radius: 8px;
             margin-bottom: 15px;
+            transition: all 0.3s ease;
+        }
+
+        .form-section:hover {
+            border-color: #cbd5e0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+        }
+
+        /* 特別強調「思考模型」區域 */
+        .form-section.model-section {
+            background-color: var(--highlight-bg);
+            border-color: #b2ebf2;
+            border-left: 4px solid #00bcd4;
         }
 
         label {
@@ -88,6 +101,9 @@
             font-weight: 600;
             margin-bottom: 8px;
             color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
 
         .helper-text {
@@ -95,15 +111,16 @@
             color: #6c757d;
             margin-bottom: 10px;
             display: block;
+            line-height: 1.4;
         }
 
-        /* 輸入框優化，防止手機版字體過小導致縮放 */
+        /* 輸入框優化 */
         input, select, textarea {
             width: 100%;
             padding: 12px;
             border: 1px solid #ced4da;
             border-radius: 6px;
-            font-size: 16px; /* 關鍵：16px以上手機不會自動放大 */
+            font-size: 16px;
             box-sizing: border-box;
             background-color: #fff;
             transition: border-color 0.3s;
@@ -112,6 +129,7 @@
         input:focus, select:focus, textarea:focus {
             outline: none;
             border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(15, 76, 129, 0.1);
         }
 
         textarea {
@@ -119,9 +137,8 @@
             resize: vertical;
         }
 
-        /* 自訂格式輸入框專用樣式 */
         #customFormatInput {
-            display: none; /* 預設隱藏 */
+            display: none;
             margin-top: 10px;
             border-color: var(--accent-color);
             background-color: #fffbf0;
@@ -155,11 +172,17 @@
             border: 1px solid #10b981;
             border-radius: 8px;
             display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         #finalPrompt {
             width: 100%;
-            height: 250px;
+            height: 300px;
             background: white;
             padding: 15px;
             border: 1px solid #ccc;
@@ -170,7 +193,6 @@
             white-space: pre-wrap;
             overflow-y: auto;
             margin-bottom: 15px;
-            /* 允許在結果框內選取文字以便複製 */
             user-select: text; 
             -webkit-user-select: text;
         }
@@ -190,7 +212,6 @@
             gap: 8px;
         }
 
-        /* 頁尾版權 */
         footer {
             text-align: center;
             padding: 30px 20px;
@@ -200,7 +221,6 @@
             margin-top: 30px;
         }
 
-        /* 手機版適配 (Media Queries) */
         @media (max-width: 600px) {
             .brand-header h1 { font-size: 1.2rem; }
             .container { padding: 0 10px; margin-top: 10px; }
@@ -213,49 +233,67 @@
 
     <header class="brand-header">
         <h1>宏國地政 | 易丞地政</h1>
-        <div class="brand-subtitle">AI 智能工作輔助系統</div>
+        <div class="brand-subtitle">AI 智能工作輔助系統 v2.0</div>
     </header>
 
     <div class="container">
         <div class="main-card">
-            <p class="intro-text">請輸入您的需求，系統將自動生成適合 AI 回答的專業指令。</p>
+            <p class="intro-text">
+                請輸入您的需求，系統將自動結合<b>「專業職能」</b>與<b>「高階思維模型」</b>，<br>
+                生成能引導 AI 給出最佳解答的精準指令。
+            </p>
 
             <div class="form-section">
                 <label>1. AI 扮演角色 (Role)</label>
-                <span class="helper-text">例如：土地代書、不動產估價師、法律顧問</span>
+                <span class="helper-text">例如：土地代書、資深主管、談判專家</span>
                 <input type="text" id="role" placeholder="預設：資深地政士/專業顧問">
             </div>
 
             <div class="form-section">
                 <label>2. 想問的問題 / 任務 (Task)</label>
-                <span class="helper-text">請簡述您遇到的客戶問題或需要處理的事項。</span>
-                <textarea id="task" placeholder="例如：客戶詢問共有土地分割的流程，以及如果有人不同意該怎麼辦？"></textarea>
+                <span class="helper-text">請簡述您遇到的客戶問題、需要學習的新知，或需要決策的困難。</span>
+                <textarea id="task" placeholder="例如：我想學習最新的國土計畫法對農地的影響，或者我需要向憤怒的客戶解釋為何無法過戶。"></textarea>
             </div>
 
             <div class="form-section">
                 <label>3. 背景資訊或特殊情況 (Context)</label>
-                <span class="helper-text">補充細節，AI 才能回答精準。</span>
-                <textarea id="context" placeholder="例如：土地位於新北市，共有持分人有5位，其中一位失聯。需要引用最新法規。"></textarea>
+                <span class="helper-text">補充細節，如：對象是誰？目前的困境？</span>
+                <textarea id="context" placeholder="例如：客戶是70歲長輩聽不懂法條、我是新進員工需要快速上手..."></textarea>
+            </div>
+
+            <div class="form-section model-section">
+                <label>🧠 4. 啟動思維引擎 (Mental Model)</label>
+                <span class="helper-text">選擇一種思維模式，讓 AI 用大師的智慧來協助您思考與解決問題。</span>
+                <select id="mentalModel" onchange="updateModelHint()">
+                    <option value="none">✨ 標準模式 (直接回答問題)</option>
+                    <option value="feynman">📖 費曼學習法 (學習新知/簡化教學)</option>
+                    <option value="first_principle">🔍 第一性原理 (拆解問題/尋找本質)</option>
+                    <option value="satir">❄️ 薩提爾溝通模式 (處理情緒/應對客戶)</option>
+                    <option value="swot">📊 SWOT 分析 (職涯規劃/策略評估)</option>
+                    <option value="grow">🌱 GROW 教練模型 (目標設定/員工輔導)</option>
+                </select>
+                <div id="modelHint" style="margin-top:10px; font-size: 0.85rem; color: #00838f; background: rgba(255,255,255,0.6); padding: 8px; border-radius: 4px; display:none;"></div>
             </div>
 
             <div class="form-section">
-                <label>4. 希望的回答格式 (Format)</label>
-                <span class="helper-text">請選擇預設格式，若選「自訂」可自行輸入。</span>
+                <label>5. 希望的回答格式 (Format)</label>
+                <span class="helper-text">決定輸出的外觀</span>
                 <select id="format" onchange="toggleCustomFormat()">
                     <option value="條列式重點解析">條列式重點解析 (適合快速閱讀)</option>
                     <option value="詳細的操作步驟教學">詳細的操作步驟教學 (SOP)</option>
                     <option value="給客戶的正式回函/Email">給客戶的正式回函/Email</option>
+                    <option value="情境模擬對話稿">情境模擬對話稿 (Roleplay)</option>
                     <option value="法規比較表格">法規比較表格</option>
-                    <option value="口語化解釋 (適合電話說明)">口語化解釋 (適合電話說明)</option>
+                    <option value="口語化解釋">口語化解釋 (適合電話說明)</option>
                     <option value="custom">✏️ 自訂格式 (手動輸入...)</option>
                 </select>
-                <input type="text" id="customFormatInput" placeholder="請輸入您想要的格式（例如：SWOT分析、心智圖架構...）">
+                <input type="text" id="customFormatInput" placeholder="請輸入您想要的格式（例如：心智圖文字稿、簡報大綱...）">
             </div>
 
-            <button class="generate-btn" onclick="generatePrompt()">⚡ 立即產生 AI 提問指令</button>
+            <button class="generate-btn" onclick="generatePrompt()">⚡ 立即產生 AI 思維指令</button>
 
             <div class="result-area" id="resultArea">
-                <h3 style="margin-top:0; color: #047857;">✅ 指令已生成：</h3>
+                <h3 style="margin-top:0; color: #047857;">✅ 指令已生成 (Ready to Copy)：</h3>
                 <div id="finalPrompt"></div>
                 <button class="copy-btn" onclick="copyToClipboard()">📋 點此複製，貼給 AI</button>
             </div>
@@ -263,71 +301,147 @@
     </div>
 
     <footer>
-        <p>© 2025 宏國地政 | 易丞地政. All Rights Reserved.</p>
-        <p>本系統僅供內部員工使用，嚴禁未經授權之複製、修改或外流。</p>
+        <p>© 2026 宏國地政 | 易丞地政. All Rights Reserved.</p>
+        <p>Internal Tool for Professional Development & Client Success.</p>
     </footer>
 
     <script>
+        // --- 模型提示說明資料庫 ---
+        const modelHints = {
+            'feynman': '💡 <b>適合：</b>學習新法規、將艱澀法條解釋給客戶聽。<br>AI 將會用「給12歲孩子聽得懂」的語言與比喻來重新闡述。',
+            'first_principle': '💡 <b>適合：</b>遇到前所未見的難題、流程優化。<br>AI 將打破既有慣例，回歸法律與邏輯的最基本事實進行重組。',
+            'satir': '💡 <b>適合：</b>面對憤怒客戶、團隊溝通衝突。<br>AI 將分析對方的「渴望、期待、感受」，並提供冰山下的對話策略。',
+            'swot': '💡 <b>適合：</b>評估新案件是否接手、個人年度職涯規劃。<br>AI 將分析優勢、劣勢、機會與威脅。',
+            'grow': '💡 <b>適合：</b>帶領新進員工、設定工作目標。<br>AI 將依照 Goal (目標) -> Reality (現狀) -> Options (方案) -> Will (意願) 進行引導。'
+        };
+
+        function updateModelHint() {
+            const select = document.getElementById('mentalModel');
+            const hintDiv = document.getElementById('modelHint');
+            const val = select.value;
+
+            if (modelHints[val]) {
+                hintDiv.innerHTML = modelHints[val];
+                hintDiv.style.display = 'block';
+            } else {
+                hintDiv.style.display = 'none';
+            }
+        }
+
         // --- 核心功能區 ---
 
-        // 切換顯示自訂輸入框
         function toggleCustomFormat() {
             const selectBox = document.getElementById('format');
             const customInput = document.getElementById('customFormatInput');
             
             if (selectBox.value === 'custom') {
                 customInput.style.display = 'block';
-                customInput.focus(); // 自動聚焦到輸入框
+                customInput.focus();
             } else {
                 customInput.style.display = 'none';
             }
         }
 
         function generatePrompt() {
+            // 1. 獲取基本資料
             const role = document.getElementById('role').value.trim() || "資深地政士與專業顧問";
             const task = document.getElementById('task').value.trim();
             const context = document.getElementById('context').value.trim() || "無特殊限制，請依照台灣現行法規回答。";
+            const model = document.getElementById('mentalModel').value;
             
-            // 處理格式邏輯
+            // 2. 獲取格式
             let formatSelect = document.getElementById('format').value;
             let finalFormat = formatSelect;
-            
             if (formatSelect === 'custom') {
-                const customVal = document.getElementById('customFormatInput').value.trim();
-                if (!customVal) {
-                    alert("⚠️ 您選擇了自訂格式，請在下方欄位輸入內容！");
-                    document.getElementById('customFormatInput').focus();
-                    return;
-                }
-                finalFormat = customVal;
+                finalFormat = document.getElementById('customFormatInput').value.trim() || "清楚的文字說明";
             }
 
+            // 3. 驗證
             if (!task) {
                 alert("⚠️ 請務必輸入「想問的問題」！");
                 return;
             }
 
+            // 4. 構建思維模型指令 (Prompt Engineering 核心)
+            let mentalModelInstruction = "";
+            
+            switch(model) {
+                case 'feynman':
+                    mentalModelInstruction = `
+【啟動：費曼學習法 (The Feynman Technique)】
+請依照以下步驟處理本任務：
+1. 想像你正在教導一位沒有法律背景的「12歲學生」或「外行客戶」。
+2. **嚴禁使用艱澀術語**，若必須使用，請務必用生活化的「譬喻」解釋（例如：將「持分」比喻為「切蛋糕」）。
+3. 用最直白、簡單的語言重新闡述核心概念，確保邏輯連貫且易懂。
+`;
+                    break;
+                case 'first_principle':
+                    mentalModelInstruction = `
+【啟動：第一性原理 (First Principles Thinking)】
+請忽略所有的「慣例」與「別人怎麼做」，依照以下步驟拆解：
+1. **Deconstruct (拆解)**：將問題拆解成最基本的法律事實與物理限制（例如：法條原本是怎麼寫的？土地的物理現狀為何？）。
+2. **Reconstruct (重組)**：從這些基本事實出發，重新推導出解決方案。
+3. 告訴我解決這個問題的「本質」是什麼，而非僅僅是表面的處理方式。
+`;
+                    break;
+                case 'satir':
+                    mentalModelInstruction = `
+【啟動：薩提爾溝通模式 (The Satir Model)】
+請運用「冰山理論」來分析此情境：
+1. **行為層**：分析對方表面說了什麼？做了什麼？
+2. **感受與觀點層**：推測對方當下的情緒（憤怒、焦慮、無助）以及背後的假設。
+3. **期待與渴望層**：對方真正想要被滿足的需求是什麼？（是被尊重？是安全感？還是金錢？）
+4. **回應策略**：請提供一段「一致性溝通」的對話範例，既能照顧對方情緒，又能堅定表達立場。
+`;
+                    break;
+                case 'swot':
+                    mentalModelInstruction = `
+【啟動：SWOT 策略分析】
+請針對此任務進行四象限分析：
+1. **Strengths (優勢)**：我們擁有什麼籌碼或有利法規？
+2. **Weaknesses (劣勢)**：目前的風險與不足之處為何？
+3. **Opportunities (機會)**：是否有轉機或創造雙贏的可能性？
+4. **Threats (威脅)**：若不處理，最壞的後果是什麼？
+最後請給出一個「關鍵策略建議」。
+`;
+                    break;
+                case 'grow':
+                    mentalModelInstruction = `
+【啟動：GROW 教練模型】
+請扮演教練角色，引導我思考：
+1. **Goal (目標)**：確認我們最終想要達成的理想結果是什麼？
+2. **Reality (現狀)**：客觀描述現在發生了什麼事？有哪些客觀事實？
+3. **Options (方案)**：列出至少 3 個可能的解決路徑，並分析優缺點。
+4. **Will (意願/行動)**：建議下一步具體該做什麼？第一步是什麼？
+`;
+                    break;
+                default:
+                    mentalModelInstruction = "【思考模式】請運用您的專業知識，邏輯清晰地回答。";
+            }
+
+            // 5. 組合最終指令
             const optimizedPrompt = `
 【角色設定】
 請你扮演：${role}
+
+${mentalModelInstruction}
 
 【核心任務】
 我需要解決以下問題：
 "${task}"
 
-【背景資訊與限制】
+【背景資訊與情境】
 ${context}
 
 【輸出要求】
-1. 請依照「${finalFormat}」的格式輸出。
+1. 請嚴格依照「${finalFormat}」的格式輸出。
 2. 內容必須專業、精準，並引用相關台灣法規（如適用）。
-3. 語氣請保持專業且具同理心。
+3. 請確保回答能幫助我進行決策或執行工作。
 `.trim();
 
             document.getElementById('finalPrompt').innerText = optimizedPrompt;
             document.getElementById('resultArea').style.display = 'block';
             
-            // 平滑捲動到結果
             setTimeout(() => {
                 document.getElementById('resultArea').scrollIntoView({ behavior: 'smooth', block: 'center' });
             }, 100);
@@ -335,19 +449,15 @@ ${context}
 
         function copyToClipboard() {
             const text = document.getElementById('finalPrompt').innerText;
-            
             if (navigator.clipboard && navigator.clipboard.writeText) {
                 navigator.clipboard.writeText(text).then(() => {
-                    alert("✅ 複製成功！請切換到 ChatGPT/Line AI 貼上使用。");
-                }).catch(err => {
-                    fallbackCopy(text);
-                });
+                    alert("✅ 複製成功！\n請將這段指令貼給 ChatGPT/Claude/Line AI 即可得到專業解答。");
+                }).catch(err => fallbackCopy(text));
             } else {
                 fallbackCopy(text);
             }
         }
 
-        // 備用複製功能
         function fallbackCopy(text) {
             const textArea = document.createElement("textarea");
             textArea.value = text;
@@ -362,34 +472,13 @@ ${context}
             document.body.removeChild(textArea);
         }
 
-        // --- 安全防護區 (防盜機制) ---
-
-        // 1. 禁止右鍵選單
-        document.addEventListener('contextmenu', function(e) {
-            e.preventDefault();
-        });
-
-        // 2. 禁止常見的開發者快捷鍵
+        // 安全防護
+        document.addEventListener('contextmenu', e => e.preventDefault());
         document.onkeydown = function(e) {
-            // F12
-            if(e.keyCode == 123) {
+            if(e.keyCode == 123 || (e.ctrlKey && e.keyCode == 'U'.charCodeAt(0)) || (e.ctrlKey && e.shiftKey && e.keyCode == 'I'.charCodeAt(0))) {
                 return false;
             }
-            // Ctrl+U (查看原始碼)
-            if(e.ctrlKey && e.keyCode == 'U'.charCodeAt(0)) {
-                return false;
-            }
-            // Ctrl+Shift+I (開發者工具)
-            if(e.ctrlKey && e.shiftKey && e.keyCode == 'I'.charCodeAt(0)) {
-                return false;
-            }
-            // Ctrl+S (另存新檔)
-            if(e.ctrlKey && e.keyCode == 'S'.charCodeAt(0)) {
-                e.preventDefault();
-                alert('⚠️ 禁止儲存網頁。');
-                return false;
-            }
-        }
+        };
     </script>
 
 </body>
