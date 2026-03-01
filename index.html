@@ -3,19 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>宏國地政 | 易丞地政 - AI 智慧提問系統 (Pro)</title>
+    <title>宏國地政 | 易丞地政 - AI 萬能提問系統 (v5.0)</title>
     <style>
         :root {
-            /* 品牌色系：保持原有沈穩風格 */
             --primary-color: #0f4c81; 
             --accent-color: #c5a065;
             --bg-color: #f0f2f5;
             --text-color: #333;
             --card-bg: #ffffff;
-            --highlight-bg: #eeffff; /* 新增高亮背景 */
+            --highlight-bg: #eeffff;
         }
 
-        /* 基礎設定 */
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
             background-color: var(--bg-color);
@@ -26,7 +24,6 @@
             -webkit-user-select: none;
         }
 
-        /* 頂部品牌欄 */
         .brand-header {
             background-color: var(--primary-color);
             color: white;
@@ -51,9 +48,8 @@
             margin-top: 5px;
         }
 
-        /* 主容器 */
         .container {
-            max-width: 800px;
+            max-width: 850px;
             margin: 20px auto;
             padding: 0 15px;
         }
@@ -74,7 +70,6 @@
             line-height: 1.6;
         }
 
-        /* 表單區域 */
         .form-section {
             background-color: #f8f9fa;
             border: 1px solid #e9ecef;
@@ -89,11 +84,16 @@
             box-shadow: 0 2px 8px rgba(0,0,0,0.03);
         }
 
-        /* 特別強調「思考模型」區域 */
         .form-section.model-section {
             background-color: var(--highlight-bg);
             border-color: #b2ebf2;
             border-left: 4px solid #00bcd4;
+        }
+
+        .form-section.constraint-section {
+            background-color: #fff5f5;
+            border-color: #fed7d7;
+            border-left: 4px solid #e53e3e;
         }
 
         label {
@@ -106,6 +106,13 @@
             gap: 8px;
         }
 
+        .highlight-label {
+            background-color: #ffeb3b;
+            padding: 2px 6px;
+            border-radius: 4px;
+            color: #333;
+        }
+
         .helper-text {
             font-size: 0.85em;
             color: #6c757d;
@@ -114,7 +121,6 @@
             line-height: 1.4;
         }
 
-        /* 輸入框優化 */
         input, select, textarea {
             width: 100%;
             padding: 12px;
@@ -133,8 +139,54 @@
         }
 
         textarea {
-            min-height: 100px;
+            min-height: 90px;
             resize: vertical;
+        }
+
+        /* --- 快捷標籤區域與分類 --- */
+        .tag-group {
+            margin-bottom: 8px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            align-items: center;
+        }
+        
+        .tag-category {
+            font-size: 0.8rem;
+            font-weight: bold;
+            color: #718096;
+            margin-right: 5px;
+            min-width: 75px;
+        }
+
+        .tag-btn {
+            background-color: #edf2f7;
+            color: #4a5568;
+            border: 1px solid #e2e8f0;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            user-select: none;
+        }
+
+        /* 工作類標籤 Hover */
+        .tag-btn.work:hover {
+            background-color: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+        /* 生活類標籤 Hover */
+        .tag-btn.life:hover {
+            background-color: #ed8936;
+            color: white;
+            border-color: #ed8936;
+        }
+        
+        .tag-btn:active {
+            transform: scale(0.95);
         }
 
         #customFormatInput {
@@ -144,7 +196,15 @@
             background-color: #fffbf0;
         }
 
-        /* 按鈕樣式 */
+        .flex-row {
+            display: flex;
+            gap: 15px;
+        }
+
+        .flex-row > div {
+            flex: 1;
+        }
+
         button.generate-btn {
             width: 100%;
             padding: 16px;
@@ -164,7 +224,6 @@
             transform: scale(0.98);
         }
 
-        /* 結果區域 */
         .result-area {
             margin-top: 30px;
             padding: 20px;
@@ -182,14 +241,14 @@
 
         #finalPrompt {
             width: 100%;
-            height: 300px;
-            background: white;
+            height: 350px;
+            background: #1e1e1e;
             padding: 15px;
-            border: 1px solid #ccc;
+            border: 1px solid #333;
             border-radius: 6px;
-            font-family: monospace;
+            font-family: 'Consolas', monospace;
             font-size: 14px;
-            color: #333;
+            color: #d4d4d4;
             white-space: pre-wrap;
             overflow-y: auto;
             margin-bottom: 15px;
@@ -210,6 +269,7 @@
             align-items: center;
             justify-content: center;
             gap: 8px;
+            font-weight: bold;
         }
 
         footer {
@@ -222,6 +282,8 @@
         }
 
         @media (max-width: 600px) {
+            .flex-row { flex-direction: column; gap: 0; }
+            .tag-category { width: 100%; margin-bottom: 5px; }
             .brand-header h1 { font-size: 1.2rem; }
             .container { padding: 0 10px; margin-top: 10px; }
             .main-card { padding: 20px 15px; }
@@ -233,86 +295,169 @@
 
     <header class="brand-header">
         <h1>宏國地政 | 易丞地政</h1>
-        <div class="brand-subtitle">AI 智能工作輔助系統 v2.0</div>
+        <div class="brand-subtitle">AI 萬能提問系統 v5.0 (工作/生活雙效版)</div>
     </header>
 
     <div class="container">
         <div class="main-card">
             <p class="intro-text">
-                請輸入您的需求，系統將自動結合<b>「專業職能」</b>與<b>「高階思維模型」</b>，<br>
-                生成能引導 AI 給出最佳解答的精準指令。
+                無論是專業工作還是日常所需，點擊下方<b>「快捷按鈕」</b>，<br>
+                系統將自動為您組合最完美的 AI 咒語！
             </p>
 
-            <div class="form-section">
-                <label>1. AI 扮演角色 (Role)</label>
-                <span class="helper-text">例如：土地代書、資深主管、談判專家</span>
-                <input type="text" id="role" placeholder="預設：資深地政士/專業顧問">
+            <div class="flex-row">
+                <div class="form-section">
+                    <label>👤 <span class="highlight-label">1. AI 扮演角色 (Role)</span></label>
+                    <input type="text" id="role" placeholder="請輸入角色..." value="資深地政士與專業顧問">
+                    
+                    <div class="tag-group" style="margin-top: 10px;">
+                        <div class="tag-category">👔 專業工作</div>
+                        <button type="button" class="tag-btn work" onclick="setInputValue('role', '資深地政士與專業不動產顧問')">👨‍⚖️ 地政顧問</button>
+                        <button type="button" class="tag-btn work" onclick="setInputValue('role', '熟悉房地產稅務的專業會計師')">💰 稅務專家</button>
+                        <button type="button" class="tag-btn work" onclick="setInputValue('role', '懂爆款文案與社群演算法的行銷企劃')">📱 行銷大師</button>
+                    </div>
+                    <div class="tag-group">
+                        <div class="tag-category">🌟 日常生活</div>
+                        <button type="button" class="tag-btn life" onclick="setInputValue('role', '溫暖且具備專業知識的心理諮商師')">🛋️ 心理諮商師</button>
+                        <button type="button" class="tag-btn life" onclick="setInputValue('role', '熟悉全球機票與隱藏景點的旅遊達人')">✈️ 旅遊達人</button>
+                        <button type="button" class="tag-btn life" onclick="setInputValue('role', '精通各國料理的米其林三星主廚')">🍳 頂級主廚</button>
+                        <button type="button" class="tag-btn life" onclick="setInputValue('role', '嚴格但能給予科學訓練建議的健身教練')">💪 健身教練</button>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <label>🎭 2. 語氣與風格 (Tone)</label>
+                    <select id="tone">
+                        <option value="專業、嚴謹、邏輯清晰且具備權威感">專業嚴謹 (適合正式文件)</option>
+                        <option value="溫和、同理、耐心且具備親和力">溫和同理 (適合安撫/諮商)</option>
+                        <option value="白話、幽默、擅長用生活化比喻">白話幽默 (適合社群貼文/初學者)</option>
+                        <option value="熱情、充滿活力且激勵人心">熱情激勵 (適合教練/創意企劃)</option>
+                        <option value="客觀、堅定、直指核心且不卑不亢">堅定談判 (適合處理糾紛/強硬表態)</option>
+                    </select>
+                </div>
             </div>
 
             <div class="form-section">
-                <label>2. 想問的問題 / 任務 (Task)</label>
-                <span class="helper-text">請簡述您遇到的客戶問題、需要學習的新知，或需要決策的困難。</span>
-                <textarea id="task" placeholder="例如：我想學習最新的國土計畫法對農地的影響，或者我需要向憤怒的客戶解釋為何無法過戶。"></textarea>
+                <label>🎯 <span class="highlight-label">3. 核心任務 / 想解決的問題 (Task)</span></label>
+                
+                <div class="tag-group">
+                    <div class="tag-category">👔 專業工作</div>
+                    <button type="button" class="tag-btn work" onclick="appendValue('task', '請幫我擬定一份給客戶的「存證信函」，重點包含：\n1. \n2. ')">📝 寫存證信函</button>
+                    <button type="button" class="tag-btn work" onclick="appendValue('task', '請幫我列出辦理「共有物分割」的完整 SOP 流程，以及需注意的盲點。')">📋 共有物分割</button>
+                    <button type="button" class="tag-btn work" onclick="appendValue('task', '客戶想了解目前「房地合一稅」規定，請幫我試算並解釋如何節稅。')">🧮 稅務解釋</button>
+                    <button type="button" class="tag-btn work" onclick="appendValue('task', '我需要寫一篇關於 [請填寫主題] 的 Facebook 貼文，吸引潛在客戶。')">✍️ 寫社群文案</button>
+                </div>
+                <div class="tag-group" style="margin-bottom: 8px;">
+                    <div class="tag-category">🌟 日常生活</div>
+                    <button type="button" class="tag-btn life" onclick="appendValue('task', '請幫我規劃一份五天四夜的 [請填寫國家] 自由行，包含交通與必吃美食。')">🗺️ 旅遊規劃</button>
+                    <button type="button" class="tag-btn life" onclick="appendValue('task', '請幫我設計一週的健康減脂菜單，需考慮上班族備餐的方便性。')">🥗 減脂菜單</button>
+                    <button type="button" class="tag-btn life" onclick="appendValue('task', '我今天要參加一場面試，請扮演面試官，跟我進行模擬面試與指導。')">🗣️ 模擬面試</button>
+                    <button type="button" class="tag-btn life" onclick="appendValue('task', '我的電腦/手機出現了這個問題：[請填寫]，請教我怎麼排除故障。')">💻 科技除錯</button>
+                    <button type="button" class="tag-btn life" onclick="appendValue('task', '請幫我把這篇長篇大論的文章，總結成 3 個核心重點。')">✂️ 重點總結</button>
+                </div>
+
+                <textarea id="task" placeholder="請描述您想請 AI 幫忙做什麼事..."></textarea>
             </div>
 
             <div class="form-section">
-                <label>3. 背景資訊或特殊情況 (Context)</label>
-                <span class="helper-text">補充細節，如：對象是誰？目前的困境？</span>
-                <textarea id="context" placeholder="例如：客戶是70歲長輩聽不懂法條、我是新進員工需要快速上手..."></textarea>
+                <label>📌 <span class="highlight-label">4. 背景資訊或特殊情況 (Context)</span></label>
+                
+                <div class="tag-group">
+                    <div class="tag-category">👔 專業工作</div>
+                    <button type="button" class="tag-btn work" onclick="appendValue('context', '【受眾對象】客戶是高齡長輩，完全聽不懂艱澀的法律條文。')">👴 長輩客戶</button>
+                    <button type="button" class="tag-btn work" onclick="appendValue('context', '【特殊狀況】目前共有人之間有嚴重的意見分歧甚至糾紛。')">⚔️ 內部糾紛</button>
+                    <button type="button" class="tag-btn work" onclick="appendValue('context', '【急迫性】這是一件急件，有強烈的時間壓力。')">⏱️ 急件處理</button>
+                </div>
+                <div class="tag-group" style="margin-bottom: 8px;">
+                    <div class="tag-category">🌟 日常生活</div>
+                    <button type="button" class="tag-btn life" onclick="appendValue('context', '【完全新手】我對這個領域完全零基礎，請把我當成 10 歲小孩來教。')">👶 零基礎新手</button>
+                    <button type="button" class="tag-btn life" onclick="appendValue('context', '【預算有限】我目前的預算非常吃緊，請推薦最高 CP 值的方案。')">💸 預算有限</button>
+                    <button type="button" class="tag-btn life" onclick="appendValue('context', '【時間緊迫】我只有不到 3 分鐘可以看，請直接給我條列式的重點懶人包。')">⏳ 只要懶人包</button>
+                    <button type="button" class="tag-btn life" onclick="appendValue('context', '【選擇困難】我目前陷入選擇障礙，請直接幫我選一個最好的並說服我。')">⚖️ 選擇困難</button>
+                    <button type="button" class="tag-btn life" onclick="appendValue('context', '【情緒狀態】我現在覺得非常焦慮與挫折，請先給我一些溫暖的鼓勵。')">🌧️ 需要安慰</button>
+                </div>
+
+                <textarea id="context" placeholder="補充細節：您的程度？時間預算限制？受眾是誰？..."></textarea>
+            </div>
+
+            <div class="form-section constraint-section">
+                <label>🛡️ 5. 限制條件與防雷 (Constraints)</label>
+                
+                <div class="tag-group" style="margin-bottom: 8px;">
+                    <button type="button" class="tag-btn work" onclick="appendValue('constraints', '1. 務必以「台灣現行最新法規」為準。\n2. 嚴禁使用中國大陸法律術語（如：小區、物業，請改用社區、管委會）。')">🏛️ 台灣地政法規防雷</button>
+                    <button type="button" class="tag-btn life" onclick="appendValue('constraints', '1. 請用繁體中文回答。\n2. 語氣請保持自然，不要像機器人，也不要使用過多的表情符號。')">🇹🇼 基本繁中限制</button>
+                    <button type="button" class="tag-btn life" onclick="appendValue('constraints', '回答字數請嚴格限制在 300 字以內。')">📏 字數限制</button>
+                </div>
+
+                <textarea id="constraints" placeholder="例如：請務必以「台灣最新現行法規」為準，或者：字數不得超過 500 字..."></textarea>
             </div>
 
             <div class="form-section model-section">
-                <label>🧠 4. 啟動思維引擎 (Mental Model)</label>
-                <span class="helper-text">選擇一種思維模式，讓 AI 用大師的智慧來協助您思考與解決問題。</span>
+                <label>🧠 6. 啟動思維引擎 (Mental Model)</label>
                 <select id="mentalModel" onchange="updateModelHint()">
-                    <option value="none">✨ 標準模式 (直接回答問題)</option>
-                    <option value="feynman">📖 費曼學習法 (學習新知/簡化教學)</option>
-                    <option value="first_principle">🔍 第一性原理 (拆解問題/尋找本質)</option>
-                    <option value="satir">❄️ 薩提爾溝通模式 (處理情緒/應對客戶)</option>
-                    <option value="swot">📊 SWOT 分析 (職涯規劃/策略評估)</option>
-                    <option value="grow">🌱 GROW 教練模型 (目標設定/員工輔導)</option>
+                    <option value="none">✨ 專家直覺模式 (直接給予最佳解答)</option>
+                    <option value="mece">🧩 MECE 麥肯錫分析 (不重不漏/全面盤點)</option>
+                    <option value="first_principle">🔍 第一性原理 (打破盲點/回歸事物本質)</option>
+                    <option value="satir">❄️ 薩提爾冰山模型 (處理人際情緒/溝通衝突)</option>
+                    <option value="feynman">📖 費曼學習法 (把複雜概念變白話文教學)</option>
+                    <option value="swot">📊 SWOT 分析 (案件評估/人生抉擇分析)</option>
+                    <option value="six_hats">🎩 六頂思考帽 (多角度腦力激盪/企劃發想)</option>
                 </select>
                 <div id="modelHint" style="margin-top:10px; font-size: 0.85rem; color: #00838f; background: rgba(255,255,255,0.6); padding: 8px; border-radius: 4px; display:none;"></div>
             </div>
 
             <div class="form-section">
-                <label>5. 希望的回答格式 (Format)</label>
-                <span class="helper-text">決定輸出的外觀</span>
+                <label>📝 7. 希望的回答格式 (Format)</label>
                 <select id="format" onchange="toggleCustomFormat()">
-                    <option value="條列式重點解析">條列式重點解析 (適合快速閱讀)</option>
-                    <option value="詳細的操作步驟教學">詳細的操作步驟教學 (SOP)</option>
-                    <option value="給客戶的正式回函/Email">給客戶的正式回函/Email</option>
-                    <option value="情境模擬對話稿">情境模擬對話稿 (Roleplay)</option>
-                    <option value="法規比較表格">法規比較表格</option>
-                    <option value="口語化解釋">口語化解釋 (適合電話說明)</option>
+                    <option value="條列式重點解析（包含：核心結論、依據、實務建議）">條列式重點解析 (適合快速閱讀)</option>
+                    <option value="詳細的操作步驟 SOP（請依照第一步、第二步...列出）">詳細的操作步驟教學 (SOP)</option>
+                    <option value="一封正式且得體的 Email 信件">正式的 Email / 回函信件</option>
+                    <option value="情境模擬對話稿（包含雙方對白，並標註情緒提示）">情境模擬對話稿 (Roleplay)</option>
+                    <option value="Markdown 結構化表格（比較優缺點差異）">比較表格 (優缺點/差異對照)</option>
                     <option value="custom">✏️ 自訂格式 (手動輸入...)</option>
                 </select>
                 <input type="text" id="customFormatInput" placeholder="請輸入您想要的格式（例如：心智圖文字稿、簡報大綱...）">
             </div>
 
-            <button class="generate-btn" onclick="generatePrompt()">⚡ 立即產生 AI 思維指令</button>
+            <button class="generate-btn" onclick="generatePrompt()">⚡ 立即產生 Pro 級指令</button>
 
             <div class="result-area" id="resultArea">
-                <h3 style="margin-top:0; color: #047857;">✅ 指令已生成 (Ready to Copy)：</h3>
+                <h3 style="margin-top:0; color: #047857;">✅ 萬能咒語已生成 (Ready to Copy)：</h3>
                 <div id="finalPrompt"></div>
-                <button class="copy-btn" onclick="copyToClipboard()">📋 點此複製，貼給 AI</button>
+                <button class="copy-btn" onclick="copyToClipboard()">📋 點此複製，貼給 AI (ChatGPT/Claude/Gemini)</button>
             </div>
         </div>
     </div>
 
     <footer>
         <p>© 2026 宏國地政 | 易丞地政. All Rights Reserved.</p>
-        <p>Internal Tool for Professional Development & Client Success.</p>
+        <p>AI Prompt Generator for Work, Life, and Creative Problem Solving.</p>
     </footer>
 
     <script>
+        // --- 快捷按鈕功能 ---
+        function setInputValue(elementId, value) {
+            document.getElementById(elementId).value = value;
+        }
+
+        function appendValue(elementId, value) {
+            const el = document.getElementById(elementId);
+            if (el.value.trim() !== '') {
+                el.value += '\n' + value;
+            } else {
+                el.value = value;
+            }
+            el.focus();
+        }
+
         // --- 模型提示說明資料庫 ---
         const modelHints = {
-            'feynman': '💡 <b>適合：</b>學習新法規、將艱澀法條解釋給客戶聽。<br>AI 將會用「給12歲孩子聽得懂」的語言與比喻來重新闡述。',
-            'first_principle': '💡 <b>適合：</b>遇到前所未見的難題、流程優化。<br>AI 將打破既有慣例，回歸法律與邏輯的最基本事實進行重組。',
-            'satir': '💡 <b>適合：</b>面對憤怒客戶、團隊溝通衝突。<br>AI 將分析對方的「渴望、期待、感受」，並提供冰山下的對話策略。',
-            'swot': '💡 <b>適合：</b>評估新案件是否接手、個人年度職涯規劃。<br>AI 將分析優勢、劣勢、機會與威脅。',
-            'grow': '💡 <b>適合：</b>帶領新進員工、設定工作目標。<br>AI 將依照 Goal (目標) -> Reality (現狀) -> Options (方案) -> Will (意願) 進行引導。'
+            'mece': '💡 <b>適合：</b>盤點風險、全面性分析。<br>AI 將確保分析「相互獨立，完全窮盡」，不漏掉任何一個可能引爆的雷點。',
+            'feynman': '💡 <b>適合：</b>學習新知、將複雜事情解釋給外行人聽。<br>AI 將會用生活化的比喻來重新闡述，確保 10 歲小孩都能聽懂。',
+            'first_principle': '💡 <b>適合：</b>遇到前所未見的難題、創新解法。<br>AI 將打破慣例，回歸事物的最基本事實重新推導解決方案。',
+            'satir': '💡 <b>適合：</b>面對憤怒客戶、情侶吵架、溝通衝突。<br>AI 將分析對方的「渴望與感受」，並提供冰山下的對話與安撫策略。',
+            'swot': '💡 <b>適合：</b>評估案件是否接手、職涯規劃、人生選擇。<br>AI 將結構化分析優勢、劣勢、機會與威脅。',
+            'six_hats': '💡 <b>適合：</b>團隊腦力激盪、企劃發想、跳脫主觀框架。<br>AI 會分別用客觀(白)、情感(紅)、悲觀(黑)、樂觀(黃)、創意(綠)的角度來審視這個問題。'
         };
 
         function updateModelHint() {
@@ -328,8 +473,6 @@
             }
         }
 
-        // --- 核心功能區 ---
-
         function toggleCustomFormat() {
             const selectBox = document.getElementById('format');
             const customInput = document.getElementById('customFormatInput');
@@ -343,101 +486,66 @@
         }
 
         function generatePrompt() {
-            // 1. 獲取基本資料
-            const role = document.getElementById('role').value.trim() || "資深地政士與專業顧問";
+            const role = document.getElementById('role').value.trim() || "萬能 AI 助理";
+            const tone = document.getElementById('tone').value;
             const task = document.getElementById('task').value.trim();
-            const context = document.getElementById('context').value.trim() || "無特殊限制，請依照台灣現行法規回答。";
+            const context = document.getElementById('context').value.trim() || "無特殊背景資訊。";
+            const constraints = document.getElementById('constraints').value.trim() || "無特殊限制。";
             const model = document.getElementById('mentalModel').value;
             
-            // 2. 獲取格式
             let formatSelect = document.getElementById('format').value;
-            let finalFormat = formatSelect;
-            if (formatSelect === 'custom') {
-                finalFormat = document.getElementById('customFormatInput').value.trim() || "清楚的文字說明";
-            }
+            let finalFormat = formatSelect === 'custom' ? (document.getElementById('customFormatInput').value.trim() || "清楚的文字說明") : formatSelect;
 
-            // 3. 驗證
             if (!task) {
-                alert("⚠️ 請務必輸入「想問的問題」！");
+                alert("⚠️ 執行失敗：請務必在第 3 點輸入「想解決的問題或任務」！");
+                document.getElementById('task').focus();
                 return;
             }
 
-            // 4. 構建思維模型指令 (Prompt Engineering 核心)
             let mentalModelInstruction = "";
-            
             switch(model) {
+                case 'mece':
+                    mentalModelInstruction = `請運用【MECE 麥肯錫不重不漏原則】進行分析：\n將問題拆解成相互獨立（Mutually Exclusive）、完全窮盡（Collectively Exhaustive）的幾個面向。請確保涵蓋所有的風險與實務操作層面，不遺漏任何關鍵點。`;
+                    break;
                 case 'feynman':
-                    mentalModelInstruction = `
-【啟動：費曼學習法 (The Feynman Technique)】
-請依照以下步驟處理本任務：
-1. 想像你正在教導一位沒有法律背景的「12歲學生」或「外行客戶」。
-2. **嚴禁使用艱澀術語**，若必須使用，請務必用生活化的「譬喻」解釋（例如：將「持分」比喻為「切蛋糕」）。
-3. 用最直白、簡單的語言重新闡述核心概念，確保邏輯連貫且易懂。
-`;
+                    mentalModelInstruction = `請運用【費曼學習法】進行解釋：\n1. 想像你正在教導一位完全沒有該領域背景的普通人或小孩。\n2. 嚴禁直接堆砌艱澀術語，若必須提到專有名詞，請務必用生活化的「譬喻」來解釋。\n3. 用最直白、簡單的邏輯重新闡述，確保聽者能秒懂。`;
                     break;
                 case 'first_principle':
-                    mentalModelInstruction = `
-【啟動：第一性原理 (First Principles Thinking)】
-請忽略所有的「慣例」與「別人怎麼做」，依照以下步驟拆解：
-1. **Deconstruct (拆解)**：將問題拆解成最基本的法律事實與物理限制（例如：法條原本是怎麼寫的？土地的物理現狀為何？）。
-2. **Reconstruct (重組)**：從這些基本事實出發，重新推導出解決方案。
-3. 告訴我解決這個問題的「本質」是什麼，而非僅僅是表面的處理方式。
-`;
+                    mentalModelInstruction = `請運用【第一性原理】進行拆解：\n1. Deconstruct：剝除所有表面的業界慣例與經驗法則，找出此問題最核心的物理限制或客觀事實。\n2. Reconstruct：從這些不可撼動的核心事實出發，一步步重新推導出最根本、最有效的解決方案。`;
                     break;
                 case 'satir':
-                    mentalModelInstruction = `
-【啟動：薩提爾溝通模式 (The Satir Model)】
-請運用「冰山理論」來分析此情境：
-1. **行為層**：分析對方表面說了什麼？做了什麼？
-2. **感受與觀點層**：推測對方當下的情緒（憤怒、焦慮、無助）以及背後的假設。
-3. **期待與渴望層**：對方真正想要被滿足的需求是什麼？（是被尊重？是安全感？還是金錢？）
-4. **回應策略**：請提供一段「一致性溝通」的對話範例，既能照顧對方情緒，又能堅定表達立場。
-`;
+                    mentalModelInstruction = `請運用【薩提爾冰山模型】處理此情境：\n1. 分析對方的表面行為與言語。\n2. 深入挖掘冰山下隱藏的：感受（情緒）、觀點（認知偏差）、期待（對我們的要求）、渴望（被尊重/安全感/愛）。\n3. 提供一段「一致性溝通」的應對策略與話術範例。`;
                     break;
                 case 'swot':
-                    mentalModelInstruction = `
-【啟動：SWOT 策略分析】
-請針對此任務進行四象限分析：
-1. **Strengths (優勢)**：我們擁有什麼籌碼或有利法規？
-2. **Weaknesses (劣勢)**：目前的風險與不足之處為何？
-3. **Opportunities (機會)**：是否有轉機或創造雙贏的可能性？
-4. **Threats (威脅)**：若不處理，最壞的後果是什麼？
-最後請給出一個「關鍵策略建議」。
-`;
+                    mentalModelInstruction = `請運用【SWOT 策略分析】進行全面評估：\n針對此情況，條列分析 S(內部優勢與籌碼)、W(內部劣勢與風險)、O(外部機會與轉機)、T(外部威脅與最壞狀況)，並給出最終的綜合決策建議。`;
                     break;
-                case 'grow':
-                    mentalModelInstruction = `
-【啟動：GROW 教練模型】
-請扮演教練角色，引導我思考：
-1. **Goal (目標)**：確認我們最終想要達成的理想結果是什麼？
-2. **Reality (現狀)**：客觀描述現在發生了什麼事？有哪些客觀事實？
-3. **Options (方案)**：列出至少 3 個可能的解決路徑，並分析優缺點。
-4. **Will (意願/行動)**：建議下一步具體該做什麼？第一步是什麼？
-`;
+                case 'six_hats':
+                    mentalModelInstruction = `請運用【六頂思考帽】進行多角度分析：\n分別戴上白帽(客觀事實)、紅帽(情感直覺)、黑帽(風險與悲觀預測)、黃帽(利益與樂觀預測)、綠帽(創意與替代方案) 來審視這個任務，最後戴上藍帽(統整)給出結論。`;
                     break;
                 default:
-                    mentalModelInstruction = "【思考模式】請運用您的專業知識，邏輯清晰地回答。";
+                    mentalModelInstruction = "請運用你深厚的專業知識庫，進行全面且具深度的解析。";
             }
 
-            // 5. 組合最終指令
-            const optimizedPrompt = `
-【角色設定】
-請你扮演：${role}
+            const optimizedPrompt = `### Role (角色設定)
+你現在是一位：${role}。
+你的語氣與風格必須：${tone}。
 
-${mentalModelInstruction}
+### Task (核心任務)
+我需要你幫我解決以下問題/任務：
+${task}
 
-【核心任務】
-我需要解決以下問題：
-"${task}"
-
-【背景資訊與情境】
+### Context (背景資訊)
 ${context}
 
-【輸出要求】
-1. 請嚴格依照「${finalFormat}」的格式輸出。
-2. 內容必須專業、精準，並引用相關台灣法規（如適用）。
-3. 請確保回答能幫助我進行決策或執行工作。
-`.trim();
+### Constraints (限制與規則)
+${constraints}
+- 在給出最終答案前，請先在腦海中進行 Step-by-Step 的邏輯推演。
+
+### Thinking Framework (思考框架)
+${mentalModelInstruction}
+
+### Output Format (輸出格式)
+請嚴格依照「${finalFormat}」的格式輸出你的回答。`.trim();
 
             document.getElementById('finalPrompt').innerText = optimizedPrompt;
             document.getElementById('resultArea').style.display = 'block';
@@ -451,7 +559,7 @@ ${context}
             const text = document.getElementById('finalPrompt').innerText;
             if (navigator.clipboard && navigator.clipboard.writeText) {
                 navigator.clipboard.writeText(text).then(() => {
-                    alert("✅ 複製成功！\n請將這段指令貼給 ChatGPT/Claude/Line AI 即可得到專業解答。");
+                    alert("✅ 複製成功！\n請將這段指令貼給 ChatGPT、Claude 或 Gemini 即可！");
                 }).catch(err => fallbackCopy(text));
             } else {
                 fallbackCopy(text);
@@ -471,14 +579,6 @@ ${context}
             }
             document.body.removeChild(textArea);
         }
-
-        // 安全防護
-        document.addEventListener('contextmenu', e => e.preventDefault());
-        document.onkeydown = function(e) {
-            if(e.keyCode == 123 || (e.ctrlKey && e.keyCode == 'U'.charCodeAt(0)) || (e.ctrlKey && e.shiftKey && e.keyCode == 'I'.charCodeAt(0))) {
-                return false;
-            }
-        };
     </script>
 
 </body>
